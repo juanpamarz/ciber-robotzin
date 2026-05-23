@@ -1,80 +1,53 @@
-import { addColorfulBackground, addButton, addPanel, addLargeTitle } from './config.js';
+import { GameState } from './GameState.js';
+import { FONT_STYLES, PALETTE, drawBackground, drawPanel, createButton } from './theme.js';
 
 export class FinalScene extends Phaser.Scene {
     constructor() {
         super({ key: 'FinalScene' });
     }
 
-    init(data) {
-        this.progress = { score: data?.score ?? 0 };
-        this.playerName = data?.playerName ?? 'Aventurero';
+    async create() {
+        const state = GameState.load();
+        const totalQuestions = 10;
+        const medal = state.score >= 8 ? '🏆 Súper Ciberhéroe' : '🌟 Buen progreso';
+
+        drawBackground(this);
+        drawPanel(this, 500, 300, 860, 440);
+
+        this.add.text(500, 120, '¡Juego terminado!', FONT_STYLES.title).setOrigin(0.5);
+        this.add.text(500, 185, `${state.playerName || 'Aventurero'}: ${medal}`, FONT_STYLES.subtitle).setOrigin(0.5);
+        this.add.text(500, 255, `Puntaje final: ${state.score} / ${totalQuestions}`, FONT_STYLES.body).setOrigin(0.5);
+
+        const saveStatus = this.add.text(500, 320, 'Guardando puntaje...', {
+            ...FONT_STYLES.hud,
+            color: PALETTE.skyBlueDeep,
+            align: 'center'
+        }).setOrigin(0.5);
+
+        const saved = await this.saveFinalScore(state);
+        saveStatus.setText(saved ? '✅ Puntaje guardado' : '⚠️ No se pudo guardar el puntaje');
+        saveStatus.setColor(saved ? PALETTE.success : PALETTE.error);
+
+        createButton(this, 500, 430, 'Jugar de nuevo', () => {
+            GameState.setScore(0);
+            this.scene.start('LoginScene');
+        }, PALETTE.skyBlueDeep);
     }
 
-    create() {
-        const score = this.progress.score;
-        const total = 10; // 3 + 3 + 4 questions
-        const earnedMedal = score >= 8;
-        const summary = earnedMedal
-            ? '¡Increíble! Eres un verdadero CIBERHÉROE. Ayudaste a todos los robots a tomar decisiones seguras en internet.'
-            : 'Muy bien. Cada intento te ayuda a tomar decisiones digitales más seguras. ¡Vuelve a intentar!';
+    async saveFinalScore(state) {
+        try {
+            const response = await fetch('/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    playerName: state.playerName,
+                    score: state.score
+                })
+            });
 
-        addColorfulBackground(this);
-        addPanel(this, 500, 300, 820, 420);
-
-        // Add decorative robots
-        this.add.text(120, 150, '🤖', {
-            fontFamily: 'Arial',
-            fontSize: '80px'
-        }).setOrigin(0.5);
-
-        this.add.text(880, 150, '🤖', {
-            fontFamily: 'Arial',
-            fontSize: '80px'
-        }).setOrigin(0.5);
-
-        // Title
-        addLargeTitle(this, 500, 70, '¡MISIÓN COMPLETADA!');
-
-        // Player name with celebration
-        this.add.text(500, 140, `¡Felicidades, ${this.playerName}!`, {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '22px',
-            fontWeight: '700',
-            color: '#FF006E',
-            align: 'center'
-        }).setOrigin(0.5);
-
-        // Medal or achievement
-        const medal = earnedMedal ? '🏆 ¡SUPERHÉROE DIGITAL!' : '🌟 ¡BUEN TRABAJO!';
-        this.add.text(500, 190, medal, {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '28px',
-            fontWeight: '700',
-            color: '#00D9FF',
-            align: 'center'
-        }).setOrigin(0.5);
-
-        // Score display
-        this.add.text(500, 250, `📊 Obtuviste ${score} de ${total} puntos`, {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '22px',
-            fontWeight: '700',
-            color: '#9D4EDD',
-            align: 'center'
-        }).setOrigin(0.5);
-
-        // Summary
-        this.add.text(500, 320, summary, {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '18px',
-            color: '#1a1a1a',
-            align: 'center',
-            wordWrap: { width: 700 }
-        }).setOrigin(0.5);
-
-        // Play again button
-        addButton(this, 500, 420, 280, 70, '🎮 ¡Jugar de nuevo!', () => {
-            this.scene.start('StartScene');
-        }, 0x00D9FF);
+            return response.ok;
+        } catch (_error) {
+            return false;
+        }
     }
 }

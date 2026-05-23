@@ -1,70 +1,60 @@
-import { addColorfulBackground, addButton, addPanel, addLargeTitle, addBodyText } from './config.js';
+import { GameState } from './GameState.js';
+import { FONT_STYLES, PALETTE, drawBackground, drawPanel, createButton } from './theme.js';
 
 export class LoginScene extends Phaser.Scene {
     constructor() {
         super({ key: 'LoginScene' });
-    }
-
-    init(data) {
-        this.playerName = data?.playerName ?? 'Aventurero';
+        this.playerName = '';
     }
 
     create() {
-        addColorfulBackground(this);
-        addPanel(this, 500, 300, 820, 400);
+        const currentState = GameState.load();
+        this.playerName = currentState.playerName;
 
-        // Large title with Zelda-like font
-        addLargeTitle(this, 500, 80, '¡Hola! Soy Ciber Robotzin');
+        drawBackground(this);
+        drawPanel(this, 500, 300, 820, 420);
 
-        // Add emoji robots around
-        this.add.text(150, 200, '🤖', {
-            fontFamily: 'Arial',
-            fontSize: '60px'
+        this.add.text(500, 130, 'Ciber Robotzin', FONT_STYLES.title).setOrigin(0.5);
+        this.add.text(500, 190, 'Escribe tu nombre para comenzar', FONT_STYLES.subtitle).setOrigin(0.5);
+
+        const inputBox = this.add.rectangle(500, 270, 460, 68, Phaser.Display.Color.HexStringToColor(PALETTE.white).color, 1);
+        inputBox.setStrokeStyle(4, Phaser.Display.Color.HexStringToColor(PALETTE.skyBlue).color);
+
+        const inputText = this.add.text(500, 270, this.playerName, {
+            ...FONT_STYLES.body,
+            fontSize: '28px',
+            wordWrap: { width: 420 }
         }).setOrigin(0.5);
 
-        this.add.text(850, 200, '🤖', {
-            fontFamily: 'Arial',
-            fontSize: '60px'
-        }).setOrigin(0.5);
+        this.input.keyboard.on('keydown', (event) => {
+            if (event.key === 'Backspace') {
+                this.playerName = this.playerName.slice(0, -1);
+            } else if (event.key === 'Enter') {
+                this.startGame();
+                return;
+            } else if (event.key.length === 1 && this.playerName.length < 18) {
+                this.playerName += event.key;
+            }
 
-        // Subtitle with current player
-        this.add.text(500, 170, `¡Bienvenido, ${this.playerName}!`, {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '22px',
-            fontWeight: '700',
-            color: '#00D9FF',
-            align: 'center'
-        }).setOrigin(0.5);
+            inputText.setText(this.playerName);
+        });
 
-        // Main message
-        this.add.text(500, 260, '¿Estás listo para una aventura épica?', {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '20px',
-            fontWeight: '700',
-            color: '#9D4EDD',
-            align: 'center'
-        }).setOrigin(0.5);
+        createButton(this, 500, 370, 'Comenzar Nivel 1', () => this.startGame(), PALETTE.brightOrange);
 
-        this.add.text(500, 310, 'Vamos a aprender a navegar con seguridad en internet mientras ayudas a robots a tomar buenas decisiones digitales.', {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '18px',
-            color: '#1a1a1a',
-            align: 'center',
-            wordWrap: { width: 700 }
+        this.add.text(500, 460, 'Usa Enter o el botón para avanzar', {
+            ...FONT_STYLES.hud,
+            color: PALETTE.skyBlueDeep
         }).setOrigin(0.5);
+    }
 
-        this.add.text(500, 380, '⚠️ Tu misión: elegir la opción más segura en cada reto.', {
-            fontFamily: 'Fredoka, sans-serif',
-            fontSize: '18px',
-            fontWeight: '700',
-            color: '#FF006E',
-            align: 'center',
-            wordWrap: { width: 700 }
-        }).setOrigin(0.5);
+    startGame() {
+        const cleanName = this.playerName.trim();
+        if (!cleanName) {
+            return;
+        }
 
-        // Play button
-        addButton(this, 500, 470, 280, 70, '🚀 ¡Comenzar aventura!', () => {
-            this.scene.start('Nivel1Scene', { score: 0, currentQuestion: 0, playerName: this.playerName });
-        }, 0xFFD60A);
+        GameState.setPlayerName(cleanName);
+        GameState.setScore(0);
+        this.scene.start('Nivel1Scene');
     }
 }
