@@ -6,10 +6,14 @@ export class Nivel2Scene extends Phaser.Scene {
     }
 
     init(data) {
-        this.progress = { score: data?.score ?? 0 };
+        this.progress = { 
+            score: data?.score ?? 0, 
+            currentQuestion: data?.currentQuestion ?? 0 
+        };
+        this.playerName = data?.playerName ?? 'Aventurero';
     }
 
     create() {
-        buildLevelScene(this, 'Nivel2Scene');
+        buildLevelScene(this, 'Nivel2Scene', this.playerName);
     }
 }
