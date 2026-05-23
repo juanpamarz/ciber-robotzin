@@ -1,13 +1,19 @@
 # Ciber Robotzin
 
-Sitio web infantil con una mini aventura interactiva creada con Phaser. La experiencia está pensada para compartirse fácilmente por internet y enseñar hábitos básicos de seguridad digital con un tono amigable.
+Juego educativo infantil en Phaser 3 con 3 niveles sobre ciberseguridad.
 
-## Qué incluye
+## Estructura principal
 
-- Pantalla de bienvenida para público infantil.
-- Tres retos breves sobre enlaces, contraseñas y datos personales.
-- Pantalla final con puntaje y opción para volver a jugar.
-- Servidor Express mínimo para probarlo localmente.
+- Escenas: `Login -> Nivel1 -> Nivel2 -> Nivel3 -> Final`
+- Estado global: `client/js/scenes/GameState.js` (usa `localStorage` para nombre y puntaje)
+- Retos: `client/js/scenes/QuestionManager.js` (maneja aciertos/errores y eventos Phaser)
+- Estilo visual: `client/js/scenes/theme.js` (cámara, fuentes legibles y paleta Azul Cielo + Naranja Brillante)
+
+## API básica de puntajes (Express)
+
+- `POST /api/scores` guarda el puntaje final
+  - body JSON: `{ "playerName": "Ana", "score": 9 }`
+- `GET /api/scores` lista puntajes guardados
 
 ## Uso local
 
@@ -18,11 +24,8 @@ npm start
 
 Luego abre `http://localhost:3000`.
 
-## Publicarlo gratis
+## Validación rápida
 
-Como la experiencia es un sitio estático, puedes publicarla gratis en servicios sencillos como:
-
-- **Netlify Drop**: arrastra la carpeta `client` al panel de Netlify.
-- **Vercel**: importa el repositorio y usa `client` como directorio público.
-
-Si prefieres seguir usando Node, el servidor también acepta la variable `PORT` para despliegues simples y sirve Phaser de forma local.
+```bash
+npm test
+```
