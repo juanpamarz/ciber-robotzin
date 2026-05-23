@@ -8,9 +8,6 @@ const port = process.env.PORT || 3000;
 app.disable('x-powered-by');
 app.use(express.static(clientPath));
 app.use('/vendor', express.static(path.join(__dirname, '../node_modules/phaser/dist')));
-app.get('/', (_request, response) => {
-    response.sendFile(path.join(clientPath, 'index.html'));
-});
 
 app.listen(port, () => {
     console.log(`Servidor iniciado en http://localhost:${port}`);
