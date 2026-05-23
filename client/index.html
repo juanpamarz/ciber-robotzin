@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ciber Robotzin | Aventura infantil</title>
+    <title>Ciber Robotzin | Aventura Educativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="./vendor/phaser.min.js"></script>
     <style>
         :root {
+            --primary-color: #FF006E;
+            --secondary-color: #00D9FF;
+            --tertiary-color: #FFD60A;
+            --quaternary-color: #00B4D8;
+            --accent-purple: #9D4EDD;
+            --accent-green: #3A86FF;
+            --accent-pink: #FB5607;
+            --dark-text: #1a1a1a;
+            --light-bg: #FFFBF0;
             color-scheme: light;
-            font-family: 'Trebuchet MS', Arial, sans-serif;
-            background: linear-gradient(180deg, #7ad8ff 0%, #edf8ff 100%);
+            font-family: 'Fredoka', sans-serif;
         }
 
         * {
@@ -22,48 +33,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
-            background: linear-gradient(180deg, #7ad8ff 0%, #edf8ff 100%);
-            color: #16324f;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF006E 0%, #00D9FF 25%, #FFD60A 50%, #3A86FF 75%, #9D4EDD 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--dark-text);
         }
 
-        .page {
-            width: min(1100px, 100%);
-            display: grid;
-            grid-template-columns: minmax(280px, 340px) minmax(320px, 1fr);
-            gap: 24px;
-            align-items: start;
-        }
-
-        .panel {
-            background: rgba(255, 255, 255, 0.88);
-            border: 4px solid #16324f;
-            border-radius: 24px;
-            box-shadow: 0 18px 30px rgba(22, 50, 79, 0.15);
-            padding: 24px;
-        }
-
-        h1 {
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 2.8rem);
-            line-height: 1.1;
-        }
-
-        p,
-        li {
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        ul {
-            padding-left: 20px;
-            margin: 16px 0 0;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         #game-container {
-            min-height: 540px;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
             overflow: hidden;
             padding: 0;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         canvas {
@@ -72,41 +62,32 @@
             height: auto;
         }
 
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: #ffe27a;
+        .name-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid #FF006E;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
             font-weight: 700;
+            color: #1a1a1a;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         @media (max-width: 900px) {
-            .page {
-                grid-template-columns: 1fr;
+            #game-container {
+                min-height: 500px;
             }
         }
     </style>
 </head>
 <body>
-    <main class="page">
-        <section class="panel">
-            <span class="badge">🤖 Ciber Robotzin</span>
-            <h1>Una aventura web pensada para peques curiosos</h1>
-            <p>
-                Este sitio presenta una experiencia colorida, simple y lista para publicarse en internet como
-                un juego web gratuito. Ayuda a Robotzin a tomar buenas decisiones digitales en tres retos cortos.
-            </p>
-            <ul>
-                <li>Lenguaje sencillo y visual para público infantil.</li>
-                <li>Ideal para compartir en un enlace público.</li>
-                <li>Puede alojarse gratis como sitio estático en Netlify o Vercel.</li>
-            </ul>
-        </section>
-
-        <section class="panel" id="game-container"></section>
-    </main>
+    <div class="name-display" id="name-display" style="display: none;"></div>
+    <section id="game-container"></section>
 
     <script type="module" src="./js/scenes/game.js"></script>
 </body>
