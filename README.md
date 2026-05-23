@@ -20,9 +20,9 @@ Luego abre `http://localhost:3000`.
 
 ## Publicarlo gratis
 
-Como el juego vive dentro de la carpeta `client`, puedes publicarlo como sitio estático gratis en servicios sencillos como:
+Como la experiencia es un sitio estático, puedes publicarla gratis en servicios sencillos como:
 
 - **Netlify Drop**: arrastra la carpeta `client` al panel de Netlify.
 - **Vercel**: importa el repositorio y usa `client` como directorio público.
 
-Si prefieres seguir usando Node, el servidor también acepta la variable `PORT` para despliegues simples.
+Si prefieres seguir usando Node, el servidor también acepta la variable `PORT` para despliegues simples y sirve Phaser de forma local.
