@@ -374,6 +374,44 @@ export function buildLevelScene(scene, sceneKey, playerName) {
         color: '#3A86FF'
     }).setOrigin(0, 0.5);
 
+    // Add NPC character that gets approached by robot
+    const npcX = 880;
+    const npcY = 150;
+    scene.add.text(npcX, npcY, '🧠', {
+        fontFamily: 'Arial',
+        fontSize: '70px'
+    }).setOrigin(0.5).setName('npc-character');
+
+    // Add robot character that walks to NPCs
+    const robotX = 120;
+    const robotY = 400;
+    const robotChar = scene.add.text(robotX, robotY, '🤖', {
+        fontFamily: 'Arial',
+        fontSize: '80px'
+    }).setOrigin(0.5).setName('robot-character');
+
+    // Add walkway effect - show NPC approaching animation
+    const walkingNPC = scene.add.text(npcX, npcY, '🧠', {
+        fontFamily: 'Arial',
+        fontSize: '70px',
+        alpha: 0.5
+    }).setOrigin(0.5).setName('walking-npc');
+
+    // Animate NPC moving to robot position
+    scene.tweens.add({
+        targets: walkingNPC,
+        x: { from: npcX, to: 200 },
+        duration: 1200,
+        ease: 'Linear',
+        delay: 300
+    });
+
+    // Add another NPC character on the left
+    scene.add.text(120, 450, '💡', {
+        fontFamily: 'Arial',
+        fontSize: '60px'
+    }).setOrigin(0.5);
+
     // Add answer buttons
     currentQ.options.forEach((option, index) => {
         const colors = [0xFF006E, 0x00D9FF, 0xFFD60A, 0xFB5607];
@@ -400,6 +438,19 @@ export function buildLevelScene(scene, sceneKey, playerName) {
                 align: 'center',
                 wordWrap: { width: 750 }
             }).setOrigin(0.5);
+
+            // Animate robot moving to next position on correct answer
+            if (option.isCorrect) {
+                const nextX = 150 + (progress.currentQuestion * 150);
+                scene.tweens.add({
+                    targets: robotChar,
+                    x: nextX,
+                    y: 350,
+                    duration: 800,
+                    ease: 'Linear',
+                    delay: 400
+                });
+            }
 
             scene.time.delayedCall(1800, () => {
                 if (progress.currentQuestion + 1 < challenge.questions.length) {
