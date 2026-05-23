@@ -1,14 +1,13 @@
-// Importa tus escenas (asegúrate de que los nombres coincidan)
-import { LoginScene } from './scenes/LoginScene.js';
-import { Nivel1Scene } from './scenes/Nivel1Scene.js';
+import { GAME_SETTINGS } from './config.js';
+import { LoginScene } from './LoginScene.js';
+import { Nivel1Scene } from './Nivel1Scene.js';
+import { Nivel2Scene } from './Nivel2Scene.js';
+import { Nivel3Scene } from './Nivel3Scene.js';
+import { FinalScene } from './FinalScene.js';
 
 const config = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 600,
-    parent: 'game-container',
-    // Aquí registramos las escenas
-    scene: [LoginScene, Nivel1Scene]
+    ...GAME_SETTINGS,
+    scene: [LoginScene, Nivel1Scene, Nivel2Scene, Nivel3Scene, FinalScene]
 };
 
-const game = new Phaser.Game(config);
+new Phaser.Game(config);

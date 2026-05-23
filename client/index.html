@@ -1,11 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Juego Educativo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciber Robotzin | Aventura infantil</title>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            background: linear-gradient(180deg, #7ad8ff 0%, #edf8ff 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(180deg, #7ad8ff 0%, #edf8ff 100%);
+            color: #16324f;
+        }
+
+        .page {
+            width: min(1100px, 100%);
+            display: grid;
+            grid-template-columns: minmax(280px, 340px) minmax(320px, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.88);
+            border: 4px solid #16324f;
+            border-radius: 24px;
+            box-shadow: 0 18px 30px rgba(22, 50, 79, 0.15);
+            padding: 24px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 1.1;
+        }
+
+        p,
+        li {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 16px 0 0;
+        }
+
+        #game-container {
+            min-height: 540px;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #ffe27a;
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="game-container"></div>
-    <script src="/js/scenes/game.js"></script>
+    <main class="page">
+        <section class="panel">
+            <span class="badge">🤖 Ciber Robotzin</span>
+            <h1>Una aventura web pensada para peques curiosos</h1>
+            <p>
+                Este sitio presenta una experiencia colorida, simple y lista para publicarse en internet como
+                un juego web gratuito. Ayuda a Robotzin a tomar buenas decisiones digitales en tres retos cortos.
+            </p>
+            <ul>
+                <li>Lenguaje sencillo y visual para público infantil.</li>
+                <li>Ideal para compartir en un enlace público.</li>
+                <li>Puede alojarse gratis como sitio estático en Netlify o Vercel.</li>
+            </ul>
+        </section>
+
+        <section class="panel" id="game-container"></section>
+    </main>
+
+    <script type="module" src="./js/scenes/game.js"></script>
 </body>
 </html>
